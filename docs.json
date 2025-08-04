@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "linden",
+  "name": "EdenVest",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#9A74EB",
+    "light": "#9A74EB",
+    "dark": "#222122"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -14,37 +14,61 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Getting Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "introduction",
+              "how-it-works",
+              "quick-start",
+              "testnet-guide"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Protocol Overview",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "protocol/architecture",
+              "protocol/tokenomics",
+              "protocol/security",
+              "protocol/governance"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "User Guides",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "guides/investing",
+              "guides/withdrawing",
+              "guides/nft-positions",
+              "guides/token-swaps"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Core Contracts",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "contracts/overview",
+              "contracts/eden-core",
+              "contracts/eden-admin",
+              "contracts/investment-pool",
+              "contracts/pool-factory"
+            ]
+          },
+          {
+            "group": "Supporting Contracts",
+            "pages": [
+              "contracts/lp-token",
+              "contracts/nft-position-manager",
+              "contracts/tax-collector",
+              "contracts/swap-router"
+            ]
+          },
+          {
+            "group": "Integration",
+            "pages": [
+              "api/overview",
+              "api/pools",
+              "api/investments",
+              "api/analytics"
             ]
           }
+       
         ]
       },
       {
@@ -71,14 +95,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
+          "anchor": "Lend & Borrow",
           "href": "https://mintlify.com/docs",
           "icon": "book-open-cover"
         },
         {
           "anchor": "Community",
           "href": "https://mintlify.com/community",
-          "icon": "slack"
+          "icon": "telegram"
         },
         {
           "anchor": "Blog",
@@ -89,20 +113,20 @@
     }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/oneline-dark.png",
+    "dark": "/logo/oneline-white.png"
   },
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:hello@edenfinance.org"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Go to App",
+      "href": "https://app.vest.edenfinance.org"
     }
   },
   "contextual": {
@@ -119,9 +143,8 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/0xednfi",
+      "github": "https://github.com/edenfinance"
     }
   }
 }
