@@ -1,0 +1,600 @@
+# Testnet Guide
+
+Get started with EdenVest on **Asset Chain Testnet** to explore the protocol risk-free before mainnet deployment. This guide walks you through setup, getting test tokens, and making your first investment.
+
+<Warning>
+This is a testnet environment. **Do not send real funds** to testnet addresses. All tokens are for testing purposes only and have no real value.
+</Warning>
+
+## Network Configuration
+
+### Asset Chain Testnet Details
+
+| Parameter | Value |
+|-----------|-------|
+| **Network Name** | Asset Chain Testnet |
+| **RPC URL** | `https://enugu-rpc.assetchain.org/` |
+| **Chain ID** | `42421` |
+| **Currency Symbol** | RWA |
+| **Block Explorer** | [https://scan-testnet.assetchain.org](https://scan-testnet.assetchain.org) |
+
+### Network Configuration for Wallets
+
+<CodeGroup>
+```text Primary RPC
+https://enugu-rpc.assetchain.org/
+```
+
+```text Chain ID (Decimal)
+42421
+```
+
+```text Chain ID (Hexadecimal)  
+0xa5c5
+```
+
+```text Currency
+RWA
+```
+</CodeGroup>
+
+## Wallet Setup
+
+### MetaMask Configuration
+
+<Steps>
+  <Step title="Open MetaMask">
+    Click the MetaMask extension in your browser
+  </Step>
+  <Step title="Add Network">
+    Click on the network dropdown → "Add Network" → "Add a network manually"
+  </Step>
+  <Step title="Enter Network Details">
+    Fill in the Asset Chain testnet details from the table above
+  </Step>
+  <Step title="Save Network">
+    Click "Save" to add the network to your MetaMask
+  </Step>
+  <Step title="Switch Network">
+    Select "Asset Chain Testnet" from the network dropdown
+  </Step>
+</Steps>
+
+### Manual Network Addition
+
+```javascript
+// Add Asset Chain Testnet programmatically
+await window.ethereum.request({
+  method: 'wallet_addEthereumChain',
+  params: [{
+    chainId: '0xa5c5', // 42421 in hex
+    chainName: 'Asset Chain Testnet',
+    nativeCurrency: {
+      name: 'RWA',
+      symbol: 'RWA',
+      decimals: 18
+    },
+    rpcUrls: ['https://enugu-rpc.assetchain.org/'],
+    blockExplorerUrls: ['https://scan-testnet.assetchain.org/']
+  }]
+});
+```
+
+### Other Wallet Support
+
+<CardGroup cols={2}>
+  <Card title="WalletConnect" icon="wallet">
+    - Open your WalletConnect-compatible wallet
+    - Scan QR code from dApp
+    - Ensure Asset Chain Testnet is selected
+  </Card>
+  <Card title="Coinbase Wallet" icon="mobile">
+    - Install Coinbase Wallet browser extension
+    - Add Asset Chain Testnet network manually
+    - Connect to EdenVest testnet dApp
+  </Card>
+</CardGroup>
+
+## Getting Test Tokens
+
+### 1. RWA Testnet Tokens
+
+You need RWA tokens to pay for gas fees on Asset Chain Testnet.
+
+<Tabs>
+  <Tab title="Asset Chain Faucet">
+    **URL**: [https://faucet.assetchain.org/](https://faucet.assetchain.org/) (TBD - Update with actual faucet URL)
+    
+    **Steps**:
+    1. Visit the official Asset Chain faucet
+    2. Connect your wallet or enter wallet address
+    3. Complete captcha verification (if required)
+    4. Click "Request RWA" to receive test tokens
+    5. Wait for transaction confirmation
+    
+    **Rate Limit**: Once per 24 hours per address
+    **Amount**: 10 RWA per request (estimated)
+  </Tab>
+  
+  <Tab title="Discord Faucet">
+    **Channel**: #testnet-faucet in Asset Chain Discord
+    
+    **Steps**:
+    1. Join Asset Chain Discord server
+    2. Navigate to #testnet-faucet channel
+    3. Use command: `/faucet <your-wallet-address>`
+    4. Wait for bot response and transaction
+    
+    **Rate Limit**: Once per 12 hours
+    **Amount**: 5 RWA per request
+  </Tab>
+  
+  <Tab title="Manual Request">
+    **Contact**: Asset Chain support team
+    
+    **Steps**:
+    1. Join Asset Chain Telegram/Discord
+    2. Request testnet RWA from moderators
+    3. Provide your wallet address
+    4. Specify EdenVest testing purpose
+    
+    **Processing**: Manual approval required
+  </Tab>
+</Tabs>
+
+### 2. cNGN Test Tokens
+
+cNGN is the primary investment token for EdenVest. Get test cNGN tokens from our custom faucet.
+
+<Note>
+**cNGN Test Token Address**: `0x1234567890123456789012345678901234567890` (TBD - Update with actual testnet address)
+</Note>
+
+#### EdenVest cNGN Faucet
+
+<Callout emoji="🚰">
+**Faucet URL**: [https://faucet.edenvest.io](https://faucet.edenvest.io) (Coming Soon)
+
+**Amount**: 10,000 cNGN per request  
+**Rate Limit**: Once per 6 hours per address  
+**Requirements**: Valid Polygon Mumbai wallet
+</Callout>
+
+#### Manual Token Addition to Wallet
+
+<CodeGroup>
+```javascript Add cNGN to MetaMask
+// Add cNGN token to MetaMask
+await window.ethereum.request({
+  method: 'wallet_watchAsset',
+  params: {
+    type: 'ERC20',
+    options: {
+      address: '0x1234567890123456789012345678901234567890', // cNGN testnet address
+      symbol: 'cNGN',
+      decimals: 18,
+      image: 'https://assets.edenvest.io/tokens/cngn.png'
+    }
+  }
+});
+```
+
+```solidity Manual Import
+Token Contract Address: 0x1234567890123456789012345678901234567890
+Token Symbol: cNGN
+Token Decimals: 18
+```
+</CodeGroup>
+
+### 3. Other Test Tokens
+
+For testing the swap functionality, you'll need other ERC20 tokens available on Asset Chain Testnet.
+
+<CardGroup cols={2}>
+  <Card title="Test USDC" icon="dollar-sign">
+    **Address**: `TBD` (To be deployed on Asset Chain)  
+    **Faucet**: EdenVest custom faucet  
+    **Amount**: 10,000 USDC per request
+  </Card>
+  <Card title="Test USDT" icon="coins">
+    **Address**: `TBD` (To be deployed on Asset Chain)  
+    **Faucet**: EdenVest custom faucet  
+    **Amount**: 10,000 USDT per request
+  </Card>
+</CardGroup>
+
+<Note>
+Since Asset Chain is a newer blockchain, standard test tokens like USDC/DAI may not be available yet. We'll deploy our own test tokens for swap functionality testing.
+</Note>
+
+## EdenVest Contract Addresses
+
+### Core Protocol Contracts
+
+| Contract | Address | Verified |
+|----------|---------|----------|
+| **EdenCore (Proxy)** | `0x5c932dDfA2a0c1283ca73F51970f0C99c6Bdf214` | ✅ |
+| **EdenCore (Implementation)** | `0x418e266552261564F5C779cCFBF7dc2D3752DD93` | ✅ |
+| **EdenAdmin** | `0x419eD15Dc769fB7D79e751FEe2a2587Bb5713E0d` | ✅ |
+| **PoolFactory** | `0x07dFDCc5CA3eE6b4e048C05DB1531e3575544Ff8` | ✅ |
+| **TaxCollector** | `0xf73aABF1f04158Ba6CB83F1C2E210825baa3Ba61` | ✅ |
+| **SwapRouter** | `0x82742492cA906Bc4dc4646ADeEFd26c0a557D578` | ✅ |
+
+### Supporting Contracts
+
+| Contract | Address | Verified |
+|----------|---------|----------|
+| **NFTPositionManager** | `0xC2f4891C5d88c9bF4863580EEce7fD76322EBF20` | ✅ |
+| **NFT Renderer** | `0xB3709130dDe14dA940f56E6FCd3495De79C2aC59` | ✅ |
+| **Pool Implementation** | `0x6e19C6fe7ACA463B616a991003a628a6cb5f1c89` | ✅ |
+| **LP Token Implementation** | `0xA93C6Df0556084aB293356AC284f520c120163a6` | ✅ |
+
+<Note>
+All contracts are verified on [Asset Chain Testnet Explorer](https://scan-testnet.assetchain.org). Click on any address to view the contract source code and interact with functions.
+</Note>
+
+## Making Your First Investment
+
+### Step 1: Connect to Testnet dApp
+
+<Steps>
+  <Step title="Visit Testnet dApp">
+    Navigate to [https://testnet.edenvest.io](https://testnet.edenvest.io)
+  </Step>
+  <Step title="Connect Wallet">
+    Click "Connect Wallet" and select your preferred wallet (MetaMask, WalletConnect, etc.)
+  </Step>
+  <Step title="Verify Network">
+    Ensure you're connected to Asset Chain Testnet
+  </Step>
+  <Step title="Check Balance">
+    Verify you have RWA for gas and cNGN for investing
+  </Step>
+</Steps>
+
+### Step 2: Browse Available Pools
+
+<CardGroup cols={2}>
+  <Card title="Demo Pool 1" icon="clock">
+    **Lock Period**: 7 days  
+    **APY**: 8%  
+    **Min Investment**: 100 cNGN  
+    **Status**: Active
+  </Card>
+  <Card title="Demo Pool 2" icon="calendar">
+    **Lock Period**: 30 days  
+    **APY**: 12%  
+    **Min Investment**: 500 cNGN  
+    **Status**: Active  
+  </Card>
+</CardGroup>
+
+### Step 3: Make an Investment
+
+<Tabs>
+  <Tab title="Direct cNGN Investment">
+    ```typescript
+    // Example investment transaction
+    const investmentAmount = ethers.utils.parseEther("1000"); // 1000 cNGN
+    const poolAddress = "0x..."; // Selected pool address
+    const title = "My Test Investment";
+    const deadline = Math.floor(Date.now() / 1000) + 300; // 5 minutes
+    
+    const tx = await edenCore.invest(
+      poolAddress,
+      investmentAmount, 
+      title,
+      deadline
+    );
+    
+    const receipt = await tx.wait();
+    console.log("Investment successful!", receipt);
+    ```
+  </Tab>
+  
+  <Tab title="Swap + Investment">
+    ```typescript
+    // Swap USDC to cNGN and invest
+    const params = {
+      pool: poolAddress,
+      tokenIn: USDC_ADDRESS,
+      amountIn: ethers.utils.parseUnits("1000", 6), // 1000 USDC
+      minAmountOut: ethers.utils.parseEther("950"), // Min 950 cNGN
+      deadline: Math.floor(Date.now() / 1000) + 600,
+      title: "USDC Swap Investment"
+    };
+    
+    const tx = await edenCore.investWithSwap(params);
+    const receipt = await tx.wait();
+    ```
+  </Tab>
+</Tabs>
+
+### Step 4: Track Your Investment
+
+After successful investment, you'll receive:
+
+1. **NFT Position**: Unique token representing your investment
+2. **LP Tokens**: Shares in the investment pool
+3. **Investment ID**: Reference number for tracking
+
+<Callout emoji="🎨">
+Your investment NFT will display:
+- Investment amount and expected returns
+- Time remaining until maturity
+- Beautiful animated progress bars
+- Pool information and APY rate
+</Callout>
+
+## Testing Scenarios
+
+### 1. Investment Flow Testing
+
+<AccordionGroup>
+  <Accordion title="Basic Investment">
+    **Scenario**: Test direct cNGN investment
+    
+    **Steps**:
+    1. Get 1,000 cNGN from faucet
+    2. Select 7-day pool
+    3. Invest 500 cNGN
+    4. Verify NFT minting
+    5. Check LP token balance
+  </Accordion>
+  
+  <Accordion title="Swap Investment">
+    **Scenario**: Test token swap + investment
+    
+    **Steps**:
+    1. Get USDC from Aave faucet
+    2. Approve USDC spending
+    3. Use investWithSwap function
+    4. Verify slippage protection
+    5. Confirm final cNGN investment
+  </Accordion>
+  
+  <Accordion title="Multiple Investments">
+    **Scenario**: Test multiple positions
+    
+    **Steps**:
+    1. Make investments in different pools
+    2. Verify separate NFTs are minted
+    3. Check LP token balances per pool
+    4. Test position tracking
+  </Accordion>
+</AccordionGroup>
+
+### 2. Withdrawal Testing
+
+<AccordionGroup>
+  <Accordion title="Matured Investment">
+    **Scenario**: Test successful withdrawal
+    
+    **Steps**:
+    1. Wait for investment to mature (or use 7-day pool)
+    2. Call withdraw function
+    3. Verify NFT is burned
+    4. Check received amount (principal + returns)
+    5. Confirm LP token burn
+  </Accordion>
+  
+  <Accordion title="Premature Withdrawal">
+    **Scenario**: Test validation (should fail)
+    
+    **Steps**:
+    1. Attempt withdrawal before maturity
+    2. Verify transaction reverts
+    3. Check error message: "Not matured"
+    4. Confirm NFT and LP tokens remain
+  </Accordion>
+</AccordionGroup>
+
+### 3. Error Handling
+
+<AccordionGroup>
+  <Accordion title="Insufficient Balance">
+    **Test**: Try investing more than wallet balance
+    **Expected**: Transaction reverts with insufficient balance error
+  </Accordion>
+  
+  <Accordion title="Invalid Pool">
+    **Test**: Try investing in non-existent pool address
+    **Expected**: Transaction reverts with "Invalid pool" error
+  </Accordion>
+  
+  <Accordion title="Below Minimum">
+    **Test**: Try investing below pool minimum
+    **Expected**: Transaction reverts with "Below minimum" error
+  </Accordion>
+</AccordionGroup>
+
+## Testnet Limitations
+
+<Warning>
+Be aware of these testnet limitations:
+
+- **No Real Value**: All tokens are worthless test tokens
+- **Network Stability**: Asset Chain Testnet may experience occasional downtime
+- **Reset Possible**: Testnet may be reset during development
+- **Rate Limits**: Faucets have strict rate limiting
+- **Gas Variations**: Gas prices may differ from mainnet
+- **Limited DEX Liquidity**: Swap functionality may have limited test token pairs
+- **New Network**: Being a newer blockchain, some wallet integrations may need manual setup
+</Warning>
+
+## Troubleshooting
+
+### Common Issues
+
+<AccordionGroup>
+  <Accordion title="Transaction Fails with 'Network Error'">
+    **Causes**:
+    - RPC endpoint is down
+    - Network congestion
+    - Incorrect network configuration
+    
+    **Solutions**:
+    - Switch to alternative RPC URL
+    - Wait and retry transaction
+    - Verify network settings in wallet
+  </Accordion>
+  
+  <Accordion title="'Insufficient Gas' Error">
+    **Causes**:
+    - Low RWA balance
+    - Gas limit too low
+    - Network congestion
+    
+    **Solutions**:
+    - Get more RWA from faucet
+    - Increase gas limit manually
+    - Wait for network to clear
+  </Accordion>
+  
+  <Accordion title="Token Not Appearing in Wallet">
+    **Causes**:
+    - Token not added to wallet
+    - Incorrect contract address
+    - Network mismatch
+    
+    **Solutions**:
+    - Manually add token contract address
+    - Verify you're on Asset Chain Testnet
+    - Check transaction was successful
+  </Accordion>
+  
+  <Accordion title="'Pool Not Active' Error">
+    **Causes**:
+    - Pool is paused or inactive
+    - Wrong pool address
+    - Pool reached capacity
+    
+    **Solutions**:
+    - Check pool status on dashboard
+    - Verify pool address is correct
+    - Try different pool
+  </Accordion>
+</AccordionGroup>
+
+### Getting Help
+
+<CardGroup cols={2}>
+  <Card title="Discord Community" icon="discord">
+    Join our Discord for real-time support and community discussions
+    
+    **Channel**: #testnet-support  
+    **URL**: [https://discord.gg/edenvest](https://discord.gg/edenvest)
+  </Card>
+  <Card title="GitHub Issues" icon="github">
+    Report bugs and technical issues on our GitHub repository
+    
+    **Repository**: [edenvest/protocol](https://github.com/edenvest/protocol)  
+    **Label**: `testnet-bug`
+  </Card>
+</CardGroup>
+
+## Advanced Testing
+
+### Contract Interaction via Asset Chain Explorer
+
+<Steps>
+  <Step title="Navigate to Contract">
+    Go to [Asset Chain Testnet Explorer](https://scan-testnet.assetchain.org) and enter contract address
+  </Step>
+  <Step title="Connect Wallet">
+    Click "Connect to Web3" and connect your wallet (ensure Asset Chain Testnet is selected)
+  </Step>
+  <Step title="Read Functions">
+    Use "Read Contract" tab to query pool information and user data
+  </Step>
+  <Step title="Write Functions">
+    Use "Write Contract" tab to execute transactions directly
+  </Step>
+</Steps>
+
+### Useful Read Functions
+
+```solidity
+// Get all active pools
+function getActivePools() external view returns (address[] memory)
+
+// Check pool information
+function poolInfo(address pool) external view returns (PoolInfo memory)
+
+// Get user investments in a pool
+function getUserInvestments(address user) external view returns (uint256[] memory)
+
+// Check if investment is withdrawable
+function isWithdrawable(uint256 tokenId) external view returns (bool)
+```
+
+### Testing with Scripts
+
+```javascript
+// Test script example for Asset Chain
+const { ethers } = require('ethers');
+
+async function testInvestmentFlow() {
+  // Setup provider and wallet for Asset Chain
+  const provider = new ethers.providers.JsonRpcProvider(
+    'https://enugu-rpc.assetchain.org/'
+  );
+  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+  
+  // Contract instances
+  const edenCore = new ethers.Contract(EDEN_CORE_ADDRESS, ABI, wallet);
+  
+  // Test investment
+  const tx = await edenCore.invest(
+    poolAddress,
+    ethers.utils.parseEther('100'),
+    'Test Investment',
+    Math.floor(Date.now() / 1000) + 300
+  );
+  
+  console.log('Transaction hash:', tx.hash);
+  console.log('View on explorer:', `https://scan-testnet.assetchain.org/tx/${tx.hash}`);
+  
+  const receipt = await tx.wait();
+  console.log('Investment successful!', receipt);
+}
+```
+
+## Next Steps
+
+Once you've successfully tested on testnet:
+
+<CardGroup cols={2}>
+  <Card
+    title="Mainnet Preparation"
+    icon="rocket"
+    href="/advanced/deployment"
+  >
+    Learn about mainnet deployment and differences
+  </Card>
+  <Card
+    title="Integration Guide"
+    icon="code"
+    href="/api/overview"
+  >
+    Build applications on top of EdenVest
+  </Card>
+  <Card
+    title="SDK Documentation"
+    icon="cube"
+    href="/sdk/installation"
+  >
+    Use our JavaScript/TypeScript SDK for easier integration
+  </Card>
+  <Card
+    title="Advanced Features"
+    icon="gear"
+    href="/advanced/monitoring"
+  >
+    Explore monitoring, analytics, and advanced functionality
+  </Card>
+</CardGroup>
+
+---
+
+<Snippet file="support-footer.mdx" />

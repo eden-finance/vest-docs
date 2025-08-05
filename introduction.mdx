@@ -1,0 +1,189 @@
+# Welcome to EdenVest
+
+**EdenVest** is a revolutionary DeFi investment protocol designed specifically for the Nigerian market, enabling fixed-term cNGN investments with guaranteed returns through a secure, transparent smart contract ecosystem.
+
+<img
+  className="block dark:hidden"
+  src="/images/hero.png"
+  alt="EdenVest Protocol Overview"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero.png"
+  alt="EdenVest Protocol Overview"
+/>
+
+## What is EdenVest?
+
+EdenVest transforms traditional investment models by offering **fixed-term investment pools** where users can:
+
+- **Invest cNGN** with predetermined lock periods and guaranteed APY
+- **Receive NFT positions** with beautiful, animated SVG representations
+- **Earn predictable returns** ranging from 7 days to 2 years
+- **Access transparent governance** through multisig-controlled protocols
+
+<CardGroup cols={2}>
+  <Card
+    title="High Yields"
+    icon="chart-line"
+    href="/guides/investing"
+  >
+    Earn competitive APY rates with guaranteed returns on cNGN investments
+  </Card>
+  <Card
+    title="NFT Positions"
+    icon="image"
+    href="/guides/nft-positions"
+  >
+    Beautiful, non-transferable NFTs representing your investment positions
+  </Card>
+  <Card
+    title="Multisig Security"
+    icon="shield-halved"
+    href="/protocol/security"
+  >
+    Multi-signature governance ensuring maximum protocol security
+  </Card>
+  <Card
+    title="Nigerian Focus"
+    icon="naira-sign"
+    href="/protocol/tokenomics"
+  >
+    Built specifically for the Nigerian market using cNGN stablecoin
+  </Card>
+</CardGroup>
+
+## Key Features
+
+### 🎯 **Fixed-Term Investments**
+Lock your cNGN for predetermined periods (7 days to 2 years) and receive guaranteed returns at maturity.
+
+### 🎨 **NFT Position Tracking**
+Each investment is represented by a unique, animated NFT that displays:
+- Investment amount and expected returns
+- Time remaining until maturity
+- Pool information and APY
+- Dynamic progress bars and status indicators
+
+### 🔐 **Multisig Governance**
+Critical protocol operations require multiple signatures:
+- Pause/unpause protocol
+- Update tax rates and treasury
+- Emergency fund recovery
+- Add/remove governance participants
+
+### 💱 **Integrated Token Swaps**
+Seamlessly swap other tokens to cNGN using our integrated Uniswap V3 router with:
+- Slippage protection
+- Rate limiting for security
+- Comprehensive failure handling
+
+## Architecture Overview
+
+```mermaid
+graph TD
+    A[User] --> B[EdenCore]
+    B --> C[InvestmentPool]
+    B --> D[SwapRouter]
+    B --> E[NFTPositionManager]
+    
+    C --> F[LPToken]
+    C --> G[TaxCollector]
+    E --> H[EdenPoolNFT]
+    
+    I[EdenAdmin] --> B
+    J[PoolFactory] --> C
+    
+    K[Multisig] --> I
+    K --> C
+```
+
+The protocol consists of interconnected smart contracts that manage:
+
+- **Investment lifecycle** from deposit to withdrawal
+- **Pool creation and management** with customizable parameters  
+- **Tax collection and distribution** to protocol treasury
+- **NFT minting and rendering** for position tracking
+- **Governance and emergency controls** via multisig
+
+## Contract Addresses
+
+### Assetchain Enugu Testnet
+
+| Contract | Address |
+|----------|---------|
+| **EdenCore Proxy** | `0x5c932dDfA2a0c1283ca73F51970f0C99c6Bdf214` |
+| **EdenAdmin** | `0x419eD15Dc769fB7D79e751FEe2a2587Bb5713E0d` |
+| **TaxCollector** | `0xf73aABF1f04158Ba6CB83F1C2E210825baa3Ba61` |
+| **SwapRouter** | `0x82742492cA906Bc4dc4646ADeEFd26c0a557D578` |
+| **PoolFactory** | `0x07dFDCc5CA3eE6b4e048C05DB1531e3575544Ff8` |
+| **NFTPositionManager** | `0xC2f4891C5d88c9bF4863580EEce7fD76322EBF20` |
+
+<Note>
+Mainnet addresses will be updated upon deployment. Always verify contract addresses before interacting with the protocol.
+</Note>
+
+## Quick Start
+
+<AccordionGroup>
+  <Accordion title="1. Connect Your Wallet">
+    Connect your Web3 wallet (MetaMask, Brave, Trust Wallet) to Assetchain testnet
+  </Accordion>
+  
+  <Accordion title="2. Get Test Tokens">
+    Obtain cNGN test tokens from our faucet or swap other tokens using our integrated router
+  </Accordion>
+  
+  <Accordion title="3. Choose an Investment Pool">
+    Browse available pools with different lock periods, APYs, and minimum investments
+  </Accordion>
+  
+  <Accordion title="4. Make Your Investment">
+    Invest your cNGN and receive an NFT representing your position and LP tokens.
+  </Accordion>
+  
+  <Accordion title="5. Track Your Position">
+    Monitor your investment through your NFT with real-time progress updates
+  </Accordion>
+  
+  <Accordion title="6. Withdraw at Maturity">
+    Claim your principal plus guaranteed returns when your investment matures
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="How It Works"
+    icon="gear"
+    href="/how-it-works"
+  >
+    Learn about the investment lifecycle and protocol mechanics
+  </Card>
+  <Card
+    title="Start Investing"
+    icon="rocket"
+    href="/guides/investing"
+  >
+    Follow our step-by-step guide to make your first investment
+  </Card>
+  <Card
+    title="Smart Contracts"
+    icon="code"
+    href="/contracts/overview"
+  >
+    Explore the technical implementation and contract architecture
+  </Card>
+  <Card
+    title="Integration Guide"
+    icon="plug"
+    href="/api/overview"
+  >
+    Build applications on top of the EdenVest protocol
+  </Card>
+</CardGroup>
+
+---
+
+<Snippet file="support-footer.mdx" />

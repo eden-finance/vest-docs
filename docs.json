@@ -23,21 +23,13 @@
             ]
           },
           {
-            "group": "Protocol Overview",
-            "pages": [
-              "protocol/architecture",
-              "protocol/tokenomics",
-              "protocol/security",
-              "protocol/governance"
-            ]
-          },
-          {
             "group": "User Guides",
             "pages": [
               "guides/investing",
               "guides/withdrawing",
               "guides/nft-positions",
-              "guides/token-swaps"
+              "guides/token-swaps",
+              "guides/lp-tokens"
             ]
           },
           {
@@ -58,35 +50,31 @@
               "contracts/tax-collector",
               "contracts/swap-router"
             ]
-          },
-          {
-            "group": "Integration",
-            "pages": [
-              "api/overview",
-              "api/pools",
-              "api/investments",
-              "api/analytics"
-            ]
           }
+         
        
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Contracts",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Core Contracts",
             "pages": [
-              "api-reference/introduction"
+              "contracts/overview",
+              "contracts/eden-core",
+              "contracts/eden-admin",
+              "contracts/investment-pool",
+              "contracts/pool-factory"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Supporting Contracts",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "contracts/lp-token",
+              "contracts/nft-position-manager",
+              "contracts/tax-collector",
+              "contracts/swap-router"
             ]
           }
         ]
