@@ -147,13 +147,17 @@ You need RWA tokens to pay for gas fees on Asset Chain Testnet.
 cNGN is the primary investment token for EdenVest. Get test cNGN tokens from our custom faucet.
 
 <Note>
-**cNGN Test Token Address**: `0x1234567890123456789012345678901234567890` (TBD - Update with actual testnet address)
+**cNGN Test Token Address**: `0x5CDDBeBAc2260CF00654887184d6BA31096fE0a5`
+**USDT Test Token Address**: `0x68dB7c3D77dbB0eD20DAE20CF5c8e6f215BA76FB`
+**USDC Test Token Address**: `0xd5ba81e5928804759d96DA750C9470bE3E7375f3`
+
 </Note>
 
 #### EdenVest cNGN Faucet
 
 <Callout emoji="🚰">
 **Faucet URL**: [https://faucet.edenvest.io](https://faucet.edenvest.io) (Coming Soon)
+**Eden Faucet**: [0x39dA94D4c05E4A9cb2cCf4b982Cc226bAAb6f7c4](https://scan-test.assetchain.org/address/0x39dA94D4c05E4A9cb2cCf4b982Cc226bAAb6f7c4)
 
 **Amount**: 10,000 cNGN per request  
 **Rate Limit**: Once per 6 hours per address  
@@ -170,7 +174,7 @@ await window.ethereum.request({
   params: {
     type: 'ERC20',
     options: {
-      address: '0x1234567890123456789012345678901234567890', // cNGN testnet address
+      address: '0x5CDDBeBAc2260CF00654887184d6BA31096fE0a5', // cNGN testnet address
       symbol: 'cNGN',
       decimals: 18,
       image: 'https://assets.edenvest.io/tokens/cngn.png'
@@ -180,7 +184,7 @@ await window.ethereum.request({
 ```
 
 ```solidity Manual Import
-Token Contract Address: 0x1234567890123456789012345678901234567890
+Token Contract Address: 0x5CDDBeBAc2260CF00654887184d6BA31096fE0a5
 Token Symbol: cNGN
 Token Decimals: 18
 ```
