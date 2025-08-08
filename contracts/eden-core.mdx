@@ -276,6 +276,7 @@ import { ethers } from 'ethers';
 import EdenCoreABI from './abis/EdenCore.json';
 
 const EDEN_CORE_ADDRESS = '0x5c932dDfA2a0c1283ca73F51970f0C99c6Bdf214';
+const CNGN_ADDRESS = '0x5CDDBeBAc2260CF00654887184d6BA31096fE0a5';
 
 class EdenVestIntegration {
   constructor(provider) {
@@ -289,6 +290,16 @@ class EdenVestIntegration {
   async getActivePools() {
     return await this.contract.getActivePools();
   }
+
+  // approve spending cNGN/usdt/usdc tokens
+  const cNGNContract = new ethers.Contract(
+      CNGN_ADDRESS,
+      ['function approve(address spender, uint256 amount)'],
+      this.contract.provider
+  );
+  const tx = await cNGNContract.approve(EDEN_CORE_ADDRESS, amount);
+  return await tx.wait();
+
 
   async invest(poolAddress, amount, title) {
     const tx = await this.contract.invest(

@@ -103,7 +103,9 @@ You need RWA tokens to pay for gas fees on Asset Chain Testnet.
 
 <Tabs>
   <Tab title="Asset Chain Faucet">
-    **URL**: [https://faucet.assetchain.org/](https://faucet.assetchain.org/) (TBD - Update with actual faucet URL)
+    **URL**: [https://faucet.assetchain.org/](https://faucet.assetchain.org/)
+    
+    **Edem Faucet**: [https://main.d36le8ts8hdp4m.amplifyapp.com](https://main.d36le8ts8hdp4m.amplifyapp.com)
     
     **Steps**:
     1. Visit the official Asset Chain faucet
@@ -113,7 +115,7 @@ You need RWA tokens to pay for gas fees on Asset Chain Testnet.
     5. Wait for transaction confirmation
     
     **Rate Limit**: Once per 24 hours per address
-    **Amount**: 10 RWA per request (estimated)
+    **Amount**: 1 RWA per request (estimated)
   </Tab>
   
   <Tab title="Discord Faucet">
@@ -148,7 +150,9 @@ cNGN is the primary investment token for EdenVest. Get test cNGN tokens from our
 
 <Note>
 **cNGN Test Token Address**: `0x5CDDBeBAc2260CF00654887184d6BA31096fE0a5`
+
 **USDT Test Token Address**: `0x68dB7c3D77dbB0eD20DAE20CF5c8e6f215BA76FB`
+
 **USDC Test Token Address**: `0xd5ba81e5928804759d96DA750C9470bE3E7375f3`
 
 </Note>
@@ -156,7 +160,7 @@ cNGN is the primary investment token for EdenVest. Get test cNGN tokens from our
 #### EdenVest cNGN Faucet
 
 <Callout emoji="🚰">
-**Faucet URL**: [https://faucet.edenvest.io](https://faucet.edenvest.io) (Coming Soon)
+**Faucet URL**: [https://faucet.vest.edenfinance.org](https://faucet.vest.edenfinance.org) (Coming Soon)
 **Eden Faucet**: [0x39dA94D4c05E4A9cb2cCf4b982Cc226bAAb6f7c4](https://scan-test.assetchain.org/address/0x39dA94D4c05E4A9cb2cCf4b982Cc226bAAb6f7c4)
 
 **Amount**: 10,000 cNGN per request  
@@ -177,7 +181,7 @@ await window.ethereum.request({
       address: '0x5CDDBeBAc2260CF00654887184d6BA31096fE0a5', // cNGN testnet address
       symbol: 'cNGN',
       decimals: 18,
-      image: 'https://assets.edenvest.io/tokens/cngn.png'
+      image: 'https://assets.vest.edenfinance.org/tokens/cngn.png'
     }
   }
 });
@@ -190,26 +194,6 @@ Token Decimals: 18
 ```
 </CodeGroup>
 
-### 3. Other Test Tokens
-
-For testing the swap functionality, you'll need other ERC20 tokens available on Asset Chain Testnet.
-
-<CardGroup cols={2}>
-  <Card title="Test USDC" icon="dollar-sign">
-    **Address**: `TBD` (To be deployed on Asset Chain)  
-    **Faucet**: EdenVest custom faucet  
-    **Amount**: 10,000 USDC per request
-  </Card>
-  <Card title="Test USDT" icon="coins">
-    **Address**: `TBD` (To be deployed on Asset Chain)  
-    **Faucet**: EdenVest custom faucet  
-    **Amount**: 10,000 USDT per request
-  </Card>
-</CardGroup>
-
-<Note>
-Since Asset Chain is a newer blockchain, standard test tokens like USDC/DAI may not be available yet. We'll deploy our own test tokens for swap functionality testing.
-</Note>
 
 ## EdenVest Contract Addresses
 
@@ -217,21 +201,21 @@ Since Asset Chain is a newer blockchain, standard test tokens like USDC/DAI may 
 
 | Contract | Address | Verified |
 |----------|---------|----------|
-| **EdenCore (Proxy)** | `0x5c932dDfA2a0c1283ca73F51970f0C99c6Bdf214` | ✅ |
-| **EdenCore (Implementation)** | `0x418e266552261564F5C779cCFBF7dc2D3752DD93` | ✅ |
-| **EdenAdmin** | `0x419eD15Dc769fB7D79e751FEe2a2587Bb5713E0d` | ✅ |
-| **PoolFactory** | `0x07dFDCc5CA3eE6b4e048C05DB1531e3575544Ff8` | ✅ |
-| **TaxCollector** | `0xf73aABF1f04158Ba6CB83F1C2E210825baa3Ba61` | ✅ |
-| **SwapRouter** | `0x82742492cA906Bc4dc4646ADeEFd26c0a557D578` | ✅ |
+| **EdenCore (Proxy)** | `0x0188a48B4c19Ad164C70dc9EA73d9C275699679F` | ✅ |
+| **EdenCore (Implementation)** | `0x8bAce891bac9a59cC43E17a927d549178Ea06781` | ✅ |
+| **EdenAdmin** | `0x5dDDef12aAc72986983C20F81fAFa48ca8E36cF4` | ✅ |
+| **PoolFactory** | `0xcf13fCd3495b95aBCf3ca8E278D19d05659ac435` | ✅ |
+| **TaxCollector** | `0x0828381Bd914FC8550e7d6934A07430c2F0ebcbf` | ✅ |
+| **SwapRouter** | `0xAFb6ADa8C5b66eE46f475faD31Add0D5BCC5A745` | ✅ |
 
 ### Supporting Contracts
 
 | Contract | Address | Verified |
 |----------|---------|----------|
-| **NFTPositionManager** | `0xC2f4891C5d88c9bF4863580EEce7fD76322EBF20` | ✅ |
+| **NFTPositionManager** | `0x5156652BeA269413fE9349941e9732d8bD02681A` | ✅ |
 | **NFT Renderer** | `0xB3709130dDe14dA940f56E6FCd3495De79C2aC59` | ✅ |
-| **Pool Implementation** | `0x6e19C6fe7ACA463B616a991003a628a6cb5f1c89` | ✅ |
-| **LP Token Implementation** | `0xA93C6Df0556084aB293356AC284f520c120163a6` | ✅ |
+| **Pool Implementation** | `0x9e949EC21B720F7e6EA8f0550a9C81f66D7eD0e3` | ✅ |
+| **LP Token Implementation** | `0xE035E1eEBF16c9a6c8898B9525d2C57FE783968A` | ✅ |
 
 <Note>
 All contracts are verified on [Asset Chain Testnet Explorer](https://scan-testnet.assetchain.org). Click on any address to view the contract source code and interact with functions.
@@ -243,7 +227,7 @@ All contracts are verified on [Asset Chain Testnet Explorer](https://scan-testne
 
 <Steps>
   <Step title="Visit Testnet dApp">
-    Navigate to [https://testnet.edenvest.io](https://testnet.edenvest.io)
+    Navigate to [https://testnet.vest.edenfinance.org](https://testnet.vest.edenfinance.org)
   </Step>
   <Step title="Connect Wallet">
     Click "Connect Wallet" and select your preferred wallet (MetaMask, WalletConnect, etc.)
@@ -284,6 +268,16 @@ All contracts are verified on [Asset Chain Testnet Explorer](https://scan-testne
     const title = "My Test Investment";
     const deadline = Math.floor(Date.now() / 1000) + 300; // 5 minutes
     
+      // approve spending cNGN/usdt/usdc tokens
+  const cNGNContract = new ethers.Contract(
+      CNGN_ADDRESS,
+      ['function approve(address spender, uint256 amount)'],
+      this.contract.provider
+  );
+  const tx = await cNGNContract.approve(EDEN_CORE_ADDRESS, investmentAmount);
+  return await tx.wait(2);
+
+
     const tx = await edenCore.invest(
       poolAddress,
       investmentAmount, 
@@ -483,16 +477,15 @@ Be aware of these testnet limitations:
 ### Getting Help
 
 <CardGroup cols={2}>
-  <Card title="Discord Community" icon="discord">
-    Join our Discord for real-time support and community discussions
-    
-    **Channel**: #testnet-support  
-    **URL**: [https://discord.gg/edenvest](https://discord.gg/edenvest)
+  <Card title="Telegram Channel" icon="telegram">
+    Join our Telegram for real-time support and community discussions
+     
+    **URL**: [https://t.me/eden_finance](https://t.me/eden_finance)
   </Card>
   <Card title="GitHub Issues" icon="github">
     Report bugs and technical issues on our GitHub repository
     
-    **Repository**: [edenvest/protocol](https://github.com/edenvest/protocol)  
+    **Repository**: [edenfinance/vest](https://github.com/edenfinance/vest)  
     **Label**: `testnet-bug`
   </Card>
 </CardGroup>
