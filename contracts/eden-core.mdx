@@ -1,62 +1,99 @@
 # EdenCore Contract
 
-The **EdenCore** contract is the main entry point and orchestrator for the EdenVest protocol. It manages investments, pool creation, token swaps, and coordinates with all other protocol components.
+The **EdenCore** contract is the main orchestrator for the EdenVest protocol. It routes deposits, performs token swaps to **cNGN**, mints **LP tokens** and **NFT positions**, handles withdrawals (with optional swap on exit), and coordinates pool lifecycle via the factory.
+
 
 <Note>
-**Contract Address (Testnet):** `0x0188a48B4c19Ad164C70dc9EA73d9C275699679F`
+**Network:** Asset Chain Testnet  
+**Proxy Address:** `0xB3DdDA0f6C116687B70CAcbffC339B1749D9A53B`  
+**Implementation:** `0x1524E3b918465F3BEC2275a5C12D71Fff26C144e`
 </Note>
 
-## Overview
+## Related Contracts
 
-EdenCore serves as the central hub that:
-- **Processes all investments** and withdrawals
-- **Manages pool registry** and activation status  
-- **Coordinates token swaps** via integrated Uniswap router
-- **Handles tax collection** and distribution
-- **Enforces protocol-wide security** measures
+| Component | Address |
+|-----------|---------|
+| **EdenAdmin** | `0xAe583ca16d7DaD1fDD04Af5C42F24AdF6Dd451C8` |
+| **Pool Factory** | `0xD21DaF50D4A53C84673166F4449E42D467584034` |
+| **Tax Collector** | `0x0b2598084C5B36939E8f3646949dBE91d856d708` |
+| **Swap Router** | `0x50913d6dCb1eb3b669b036c52A4d3d4a8405C576` |
+| **NFT Position Manager** | `0x867518e93f73A0260ff35B6E4FD85a2baED27174` |
+| **NFT Renderer** | `0xCbaE3bc14b761589aba8EaB06B16e520c04500DA` |
 
+
+## What EdenCore Does
+
+<CardGroup cols={2}>
+  <Card title="Process Investments" icon="coins">
+    Accepts direct cNGN or performs swap-then-invest in one transaction
+  </Card>
+  <Card title="Mint Receipts" icon="receipt">
+    Issues LP tokens (ERC‑20) and non-transferable NFT positions (ERC‑721)
+  </Card>
+  <Card title="Handle Withdrawals" icon="arrow-up-from-bracket">
+    Redeem to cNGN or swap to chosen token on exit
+  </Card>
+  <Card title="Manage Pools" icon="swimming-pool">
+    Create and toggle pool activation through the factory
+  </Card>
+</CardGroup>
 ## Key Features
 
-### 🎯 **Investment Management**
-- Direct cNGN investments with deadline protection
-- Token swap integration for seamless UX
-- Automatic LP token minting and tax collection
-- Comprehensive slippage and liquidity checks
 
-### 🏭 **Pool Management** 
-- Pool creation via factory pattern
-- Registry of all active/inactive pools
-- Pool configuration validation
-- Administrative controls for pool status
-
-### 🔒 **Security & Governance**
-- Upgradeable via UUPS proxy pattern
-- Multi-role access control system
-- Emergency pause functionality
-- Integration with EdenAdmin for multisig operations
-
-## Contract Architecture
+### Architecture Flow
 
 ```mermaid
 graph TD
-    A[EdenCore] --> B[PoolFactory]
-    A --> C[TaxCollector]  
-    A --> D[SwapRouter]
-    A --> E[NFTPositionManager]
-    A --> F[InvestmentPool]
-    
-    G[EdenAdmin] --> A
-    H[User] --> A
-    
-    A --> I[cNGN Token]
+  User((User)) --> A[EdenCore Proxy]
+  A --> B[PoolFactory]
+  A --> C[TaxCollector]
+  A --> D[SwapRouter]
+  A --> E[NFTPositionManager]
+  A --> F[InvestmentPool]
+  A --> I[cNGN Token]
+  G[EdenAdmin] --> A
 ```
+
+## Key Data Structures
+
+### InvestmentParams
+
+Used for swap-and-invest operations:
+
+```solidity
+struct InvestmentParams {
+    address pool;         // Target investment pool
+    address tokenIn;      // Input token (if swapping)
+    uint256 amountIn;     // Amount of tokenIn
+    uint256 minAmountOut; // Minimum cNGN expected after swap
+    uint256 deadline;     // Expiry timestamp (unix)
+    string title;         // Saved in NFT metadata
+}
+```
+
+### WithdrawAndSwapParams
+
+Used for withdraw-and-swap operations:
+
+```solidity
+struct WithdrawAndSwapParams {
+    address pool;           // Pool address
+    uint256 tokenId;        // NFT position ID
+    uint256 lpTokenAmount;  // LP tokens to redeem
+    address tokenOut;       // Desired output token
+    uint256 minAmountOut;   // Minimum amount expected
+    uint256 deadline;       // Transaction deadline
+    uint256 maxSlippageBps; // Max slippage (default 100 = 1%)
+}
+```
+
 
 ## Core Functions
 
 ### Investment Functions
 
 #### `invest()`
-Direct investment using cNGN tokens.
+Direct investment using cNGN tokens without swapping.
 
 ```solidity
 function invest(
@@ -73,46 +110,72 @@ function invest(
 - `title`: Custom title for the investment
 - `deadline`: Transaction deadline (0 for no deadline)
 
+**Process Flow:**
+1. Validates pool registration and active status
+2. Transfers cNGN from user and approves pool
+3. Calls `InvestmentPool.invest()` to mint LP and NFT
+4. Collects protocol tax in LP tokens to TaxCollector
+5. Emits `InvestmentMade` event
+
 **Returns:**
 - `tokenId`: NFT position token ID
 - `lpTokens`: LP tokens minted to investor
 
 <CodeGroup>
-```solidity Example Usage
-// Direct cNGN investment
-uint256 amount = 1000 * 10**18; // 1000 cNGN
-address pool = 0x123...; // Pool address
-string memory title = "My Investment";
-uint256 deadline = block.timestamp + 300; // 5 minutes
+```javascript Frontend Integration
+import { ethers } from "ethers";
+import EdenCoreABI from "./abis/EdenCore.json";
 
-(uint256 tokenId, uint256 lpTokens) = edenCore.invest(
-    pool,
-    amount,
-    title, 
-    deadline
+const core = new ethers.Contract(
+  "0xB3DdDA0f6C116687B70CAcbffC339B1749D9A53B",
+  EdenCoreABI,
+  signer
 );
+
+// 1. Approve cNGN to EdenCore
+await cNGNContract.approve(
+  core.address, 
+  ethers.utils.parseEther("1000")
+);
+
+// 2. Make investment
+const tx = await core.invest(
+  POOL_ADDRESS,
+  ethers.utils.parseEther("1000"),
+  "My Investment",
+  Math.floor(Date.now()/1000) + 300 // 5 min deadline
+);
+
+const receipt = await tx.wait();
+console.log("Investment successful!", receipt);
 ```
 
-```javascript JavaScript SDK
-const investment = await edenVest.invest({
-  pool: '0x123...',
-  amount: ethers.utils.parseEther('1000'),
-  title: 'My Investment',
-  deadline: Math.floor(Date.now() / 1000) + 300
-});
+```solidity Direct Contract Call
+// Solidity example for contract integration
+IERC20(cNGN).approve(edenCore, investmentAmount);
 
-console.log('NFT Token ID:', investment.tokenId);
-console.log('LP Tokens:', investment.lpTokens);
+(uint256 tokenId, uint256 lpTokens) = IEdenCore(edenCore).invest(
+    poolAddress,
+    investmentAmount,
+    "Smart Contract Investment",
+    block.timestamp + 300
+);
 ```
 </CodeGroup>
 
 #### `investWithSwap()`
-Investment with automatic token swapping.
+Invest using any ERC‑20 token. EdenCore swaps to cNGN then invests in one transaction.
 
 ```solidity
 function investWithSwap(InvestmentParams memory params) 
     external returns (uint256 tokenId, uint256 lpTokens)
 ```
+
+**Advanced Features:**
+- **Slippage Protection**: Applies default 1% slippage protection
+- **Liquidity Validation**: Checks available swap liquidity
+- **Balance Verification**: Ensures swap executed correctly
+
 
 **InvestmentParams Structure:**
 ```solidity
@@ -127,35 +190,71 @@ struct InvestmentParams {
 ```
 
 <CodeGroup>
-```solidity Advanced Swap Investment
-InvestmentParams memory params = InvestmentParams({
-    pool: poolAddress,
-    tokenIn: 0x456..., // USDC address
-    amountIn: 1000 * 10**6, // 1000 USDC
-    minAmountOut: 950 * 10**18, // Min 950 cNGN (5% slippage)
-    deadline: block.timestamp + 600,
-    title: "USDC -> cNGN Investment"
-});
+```javascript Swap Investment Example
+// 1. Approve input token to EdenCore
+await usdcContract.approve(
+  core.address, 
+  ethers.utils.parseUnits("1000", 6)
+);
 
-(uint256 tokenId, uint256 lpTokens) = edenCore.investWithSwap(params);
+// 2. Preview swap quote (optional)
+const [expectedOut] = await core.checkSwapLiquidity(
+  USDC_ADDRESS, 
+  ethers.utils.parseUnits("1000", 6)
+);
+
+// 3. Calculate minimum output with user slippage
+const minOut = expectedOut.mul(95).div(100); // 5% slippage tolerance
+
+// 4. Execute swap and investment
+await core.investWithSwap({
+  pool: POOL_ADDRESS,
+  tokenIn: USDC_ADDRESS,
+  amountIn: ethers.utils.parseUnits("1000", 6),
+  minAmountOut: minOut,
+  deadline: Math.floor(Date.now()/1000) + 600,
+  title: "USDC → cNGN Investment"
+});
 ```
 
-```javascript JavaScript Integration
-const swapInvestment = await edenVest.investWithSwap({
-  pool: poolAddress,
-  tokenIn: USDC_ADDRESS,
-  amountIn: ethers.utils.parseUnits('1000', 6), // 1000 USDC
-  minAmountOut: ethers.utils.parseEther('950'), // Min 950 cNGN
-  deadline: Math.floor(Date.now() / 1000) + 600,
-  title: 'USDC -> cNGN Investment'
-});
+```typescript TypeScript Integration
+interface SwapInvestmentParams {
+  poolAddress: string;
+  tokenIn: string;
+  amountIn: BigNumber;
+  slippagePercent: number;
+  title: string;
+}
+
+async function investWithSwap(params: SwapInvestmentParams) {
+  // Get quote
+  const [expectedOut] = await edenCore.checkSwapLiquidity(
+    params.tokenIn, 
+    params.amountIn
+  );
+  
+  // Calculate slippage
+  const slippageFactor = (100 - params.slippagePercent) / 100;
+  const minAmountOut = expectedOut.mul(Math.floor(slippageFactor * 100)).div(100);
+  
+  // Execute transaction
+  return await edenCore.investWithSwap({
+    pool: params.poolAddress,
+    tokenIn: params.tokenIn,
+    amountIn: params.amountIn,
+    minAmountOut,
+    deadline: Math.floor(Date.now()/1000) + 600,
+    title: params.title
+  });
+}
 ```
 </CodeGroup>
+
 
 ### Withdrawal Functions
 
 #### `withdraw()`
-Withdraw matured investments by burning LP tokens and NFT.
+Withdraw matured positions to receive cNGN directly, by burning LP tokens and NFT.
 
 ```solidity
 function withdraw(
@@ -165,10 +264,104 @@ function withdraw(
 ) external returns (uint256 withdrawAmount)
 ```
 
+**Important:** User must approve LP tokens to the **pool address** (not EdenCore).
+
 **Process:**
 1. Validates investment maturity and ownership
 2. Burns LP tokens and NFT position
 3. Transfers principal + returns to investor
+<CodeGroup>
+```javascript Basic Withdrawal
+// 1. Approve LP tokens to the POOL (not EdenCore!)
+await lpTokenContract.approve(POOL_ADDRESS, lpAmount);
+
+// 2. Execute withdrawal
+const withdrawnAmount = await core.withdraw(
+  POOL_ADDRESS,
+  TOKEN_ID,
+  lpAmount
+);
+
+console.log(`Withdrawn ${ethers.utils.formatEther(withdrawnAmount)} cNGN`);
+```
+
+```javascript Frontend Helper Function
+async function withdrawInvestment(
+  poolAddress: string,
+  tokenId: number,
+  lpTokenAmount: BigNumber
+) {
+  try {
+    // Get LP token contract address
+    const poolContract = new ethers.Contract(poolAddress, PoolABI, signer);
+    const lpTokenAddress = await poolContract.lpToken();
+    
+    // Approve LP tokens to pool
+    const lpToken = new ethers.Contract(lpTokenAddress, ERC20ABI, signer);
+    await lpToken.approve(poolAddress, lpTokenAmount);
+    
+    // Execute withdrawal
+    const tx = await edenCore.withdraw(poolAddress, tokenId, lpTokenAmount);
+    return await tx.wait();
+  } catch (error) {
+    console.error("Withdrawal failed:", error);
+    throw error;
+  }
+}
+```
+</CodeGroup>
+
+
+#### `withdrawAndSwap()` - Withdraw with Token Swap
+
+Withdraw to cNGN then optionally swap to another token in a single transaction.
+
+```solidity
+function withdrawAndSwap(WithdrawAndSwapParams calldata params)
+    external whenNotPaused nonReentrant
+    returns (uint256 amountOut)
+```
+
+**Process:**
+1. Validates pool and transfers LP tokens
+2. Withdraws to cNGN via `InvestmentPool.withdraw()`
+3. If `tokenOut == cNGN`: sends cNGN directly to user
+4. Otherwise: swaps cNGN to `tokenOut` with slippage protection
+
+<CodeGroup>
+```javascript Withdraw and Swap to USDC
+// 1. Approve LP tokens to pool
+const quotedAmount = await quoterV3.callStatic.quoteExactInputSingle(params);
+const minAmountOut = quotedAmount.mul(100 - slippagePercent).div(100);
+
+await lpTokenContract.approve(POOL_ADDRESS, lpAmount);
+
+// 2. Withdraw and swap to USDT
+await core.withdrawAndSwap({
+  pool: POOL_ADDRESS,
+  tokenId: TOKEN_ID,
+  lpTokenAmount: lpAmount,
+  tokenOut: USDT_ADDRESS,
+  minAmountOut, // Min 950 USDC
+  deadline: Math.floor(Date.now()/1000) + 600,
+  maxSlippageBps: 100 // 1% max slippage
+});
+```
+
+```javascript Withdraw Direct to cNGN
+// For direct cNGN payout (no swap)
+await core.withdrawAndSwap({
+  pool: POOL_ADDRESS,
+  tokenId: TOKEN_ID,
+  lpTokenAmount: lpAmount,
+  tokenOut: CNGN_ADDRESS, // Direct cNGN payout
+  minAmountOut: expectedCNGNAmount,
+  deadline: Math.floor(Date.now()/1000) + 600,
+  maxSlippageBps: 0 // No slippage for direct payout
+});
+```
+</CodeGroup>
+
 
 ### Pool Management Functions
 
@@ -197,6 +390,40 @@ struct PoolParams {
     uint256 taxRate;           // Pool-specific tax rate
 }
 ```
+
+<CodeGroup>
+```javascript Create Pool Example
+const poolParams = {
+  name: "High Yield 6-Month Pool",
+  symbol: "HY6M",
+  admin: adminAddress,
+  poolMultisig: multisigWalletAddress,
+  multisigSigners: [signer1, signer2, signer3],
+  cNGN: CNGN_ADDRESS,
+  lockDuration: 6 * 30 * 24 * 60 * 60, // 6 months
+  minInvestment: ethers.utils.parseEther("500"),   // 500 cNGN
+  maxInvestment: ethers.utils.parseEther("50000"), // 50k cNGN
+  utilizationCap: ethers.utils.parseEther("1000000"), // 1M total
+  expectedRate: 1500, // 15% APY
+  taxRate: 250        // 2.5% tax
+};
+
+const poolAddress = await edenCore.createPool(poolParams);
+console.log("New pool created:", poolAddress);
+```
+
+```solidity Pool Validation
+// Validation checks performed by createPool
+require(bytes(poolParams.name).length > 0, "Invalid name");
+require(poolParams.admin != address(0), "Invalid admin");
+require(poolParams.poolMultisig != address(0), "Invalid multisig");
+require(poolParams.lockDuration >= 7 days, "Duration too short");
+require(poolParams.minInvestment > 0, "Invalid min investment");
+require(poolParams.maxInvestment >= poolParams.minInvestment, "Invalid max");
+require(poolParams.expectedRate <= 10000, "Rate too high"); // Max 100% APY
+require(poolParams.taxRate <= 1000, "Tax rate too high");   // Max 10%
+```
+</CodeGroup>
 
 ### View Functions
 
