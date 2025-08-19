@@ -330,22 +330,114 @@ function withdrawAndSwap(WithdrawAndSwapParams calldata params)
 
 <CodeGroup>
 ```javascript Withdraw and Swap to USDC
-// 1. Approve LP tokens to pool
-const quotedAmount = await quoterV3.callStatic.quoteExactInputSingle(params);
-const minAmountOut = quotedAmount.mul(100 - slippagePercent).div(100);
+import { Address, getContract, parseUnits, zeroAddress } from 'viem'
+import { publicClient, walletClient, chain } from './clients' //  viem setup
+import coreAbi from './abi/EdenVestCore.json'
+import poolAbi from './abi/InvestmentPool.json'
+import erc20Abi from './abi/erc20.json'
+import quoterAbi from './abi/QuoterV3.json' // or call  router.getAmountOut
 
-await lpTokenContract.approve(POOL_ADDRESS, lpAmount);
+// ─────────────────────────────────────────────────────────
+// Inputs
+// ─────────────────────────────────────────────────────────
+const CORE_ADDRESS  : Address = '0x...EdenVestCore'        // proxy
+const POOL_ADDRESS  : Address = '0x...InvestmentPool'
+const CNGN_ADDRESS  : Address = '0x...cNGN'
+const TOKEN_OUT     : Address = '0x...USDC_or_USDT'        //  tokenOut
+const TOKEN_ID      : bigint  = 67n                        //  NFT position id
+const LP_AMOUNT     : bigint  = 4563252163868174995110n    // lpTokenAmount (full)
+const SLIPPAGE_BPS  : bigint  = 100n                       // 1% (100 bps)
+const DEADLINE      : bigint  = BigInt(Math.floor(Date.now()/1000) + 600)
 
-// 2. Withdraw and swap to USDT
-await core.withdrawAndSwap({
-  pool: POOL_ADDRESS,
-  tokenId: TOKEN_ID,
-  lpTokenAmount: lpAmount,
-  tokenOut: USDT_ADDRESS,
-  minAmountOut, // Min 950 USDC
-  deadline: Math.floor(Date.now()/1000) + 600,
-  maxSlippageBps: 100 // 1% max slippage
-});
+// (optional) if you prefer to quote via Uniswap QuoterV2 directly:
+const QUOTER_ADDRESS: Address = '0x...QuoterV2'
+
+// ─────────────────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────────────────
+
+const core = getContract({ address: CORE_ADDRESS, abi: coreAbi, client: { public: publicClient, wallet: walletClient }})
+const pool = getContract({ address: POOL_ADDRESS, abi: poolAbi, client: { public: publicClient, wallet: walletClient }})
+const cngn = getContract({ address: CNGN_ADDRESS, abi: erc20Abi, client: { public: publicClient, wallet: walletClient }})
+
+async function getLpToken(): Promise<Address> {
+  const { lpToken } = await core.read.poolInfo([POOL_ADDRESS])
+  return lpToken as Address
+}
+
+async function getInvestmentIdForToken(tokenId: bigint): Promise<bigint> {
+  // pool stores NFT→investmentId
+  const investId = await pool.read.nftToInvestment([tokenId])
+  return investId
+}
+
+async function getAmountInCNGN(investmentId: bigint): Promise<bigint> {
+  // Full withdrawal pays principal + expected interest (pool computes)
+  const inv = await pool.read.getInvestment([investmentId])
+  // inv = [investor, amount, title, depositTime, maturityTime, expectedReturn, actualReturn, isWithdrawn, lpTokens]
+  const expectedReturn: bigint = inv[5]
+  return expectedReturn
+}
+
+async function quoteMinOutViaQuoter(amountIn: bigint): Promise<bigint> {
+  // Uniswap V3 QuoterV2 single‑hop example (adjust fee if needed)
+  const quoter = getContract({ address: QUOTER_ADDRESS, abi: quoterAbi, client: { public: publicClient }})
+  // fee must match  router pool fee (e.g., 3000 = 0.3%)
+  const fee: number = 3000
+  const [amountOut] = await quoter.read.quoteExactInputSingle([{
+    tokenIn:  CNGN_ADDRESS,
+    tokenOut: TOKEN_OUT,
+    amountIn,
+    fee,
+    sqrtPriceLimitX96: 0n
+  }])
+  return (amountOut * (10_000n - SLIPPAGE_BPS)) / 10_000n
+}
+
+// ─────────────────────────────────────────────────────────
+// Main: Withdraw and Swap to TOKEN_OUT
+// ─────────────────────────────────────────────────────────
+
+export async function withdrawAndSwapToTokenOut() {
+  // 0) Resolve LP token & investment info
+  const LP_TOKEN_ADDR = await getLpToken()
+  const lpToken = getContract({ address: LP_TOKEN_ADDR, abi: erc20Abi, client: { public: publicClient, wallet: walletClient }})
+
+  const investmentId = await getInvestmentIdForToken(TOKEN_ID)
+  const amountInCNGN  = await getAmountInCNGN(investmentId) // full redemption
+
+  // 1) Approve LP → Pool
+  const currentLpAllowance = await lpToken.read.allowance([await walletClient.getAddresses().then(a=>a[0]), POOL_ADDRESS])
+  if (currentLpAllowance < LP_AMOUNT) {
+    await lpToken.write.approve([POOL_ADDRESS, LP_AMOUNT])
+  }
+
+  // 2) Approve cNGN → Core (pool pays you, then Core pulls)
+  const currentCngnAllowance = await cngn.read.allowance([await walletClient.getAddresses().then(a=>a[0]), CORE_ADDRESS])
+  if (currentCngnAllowance < amountInCNGN) {
+    // You can also approve max uint if you prefer a one‑time approval:
+    await cngn.write.approve([CORE_ADDRESS, amountInCNGN])
+  }
+
+  // 3) Compute minAmountOut (1% slippage here)
+  const minAmountOut = await quoteMinOutViaQuoter(amountInCNGN)
+  // NOTE:  router also enforces its own maxSlippage (default 3%).
+  // Ensure minAmountOut >= quoted * (1 - router.maxSlippageBps/10000). With 1% it's fine.
+
+  // 4) Call Core.withdrawAndSwap
+  const hash = await core.write.withdrawAndSwap([{
+    pool:           POOL_ADDRESS,
+    tokenId:        TOKEN_ID,
+    lpTokenAmount:  LP_AMOUNT,
+    tokenOut:       TOKEN_OUT,
+    minAmountOut:   minAmountOut,
+    deadline:       DEADLINE,
+    maxSlippageBps: SLIPPAGE_BPS  // Core sanity cap (100 = 1%)
+  }])
+
+  const receipt = await publicClient.waitForTransactionReceipt({ hash })
+  return receipt
+}
 ```
 
 ```javascript Withdraw Direct to cNGN
