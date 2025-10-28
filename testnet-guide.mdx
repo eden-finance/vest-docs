@@ -105,7 +105,7 @@ You need RWA tokens to pay for gas fees on Asset Chain Testnet.
   <Tab title="Asset Chain Faucet">
     **URL**: [https://faucet.assetchain.org/](https://faucet.assetchain.org/)
     
-    **Edem Faucet**: [https://main.d36le8ts8hdp4m.amplifyapp.com](https://main.d36le8ts8hdp4m.amplifyapp.com)
+    **Eden Faucet**: [https://faucet.edenfinance.org/](https://faucet.edenfinance.org/)
     
     **Steps**:
     1. Visit the official Asset Chain faucet
@@ -115,33 +115,10 @@ You need RWA tokens to pay for gas fees on Asset Chain Testnet.
     5. Wait for transaction confirmation
     
     **Rate Limit**: Once per 24 hours per address
-    **Amount**: 1 RWA per request (estimated)
+    **Amount**: 0.01 RWA per request (estimated)
   </Tab>
   
-  <Tab title="Discord Faucet">
-    **Channel**: #testnet-faucet in Asset Chain Discord
-    
-    **Steps**:
-    1. Join Asset Chain Discord server
-    2. Navigate to #testnet-faucet channel
-    3. Use command: `/faucet <your-wallet-address>`
-    4. Wait for bot response and transaction
-    
-    **Rate Limit**: Once per 12 hours
-    **Amount**: 5 RWA per request
-  </Tab>
-  
-  <Tab title="Manual Request">
-    **Contact**: Asset Chain support team
-    
-    **Steps**:
-    1. Join Asset Chain Telegram/Discord
-    2. Request testnet RWA from moderators
-    3. Provide your wallet address
-    4. Specify EdenVest testing purpose
-    
-    **Processing**: Manual approval required
-  </Tab>
+
 </Tabs>
 
 ### 2. cNGN Test Tokens
@@ -149,23 +126,21 @@ You need RWA tokens to pay for gas fees on Asset Chain Testnet.
 cNGN is the primary investment token for EdenVest. Get test cNGN tokens from our custom faucet.
 
 <Note>
-**cNGN Test Token Address**: `0x5CDDBeBAc2260CF00654887184d6BA31096fE0a5`
+**cNGN Test Token Address**: `0xA4040DBBa36Afa7CD86B17Df80A81cD02A3483Fa`
 
-**USDT Test Token Address**: `0x68dB7c3D77dbB0eD20DAE20CF5c8e6f215BA76FB`
-
-**USDC Test Token Address**: `0xd5ba81e5928804759d96DA750C9470bE3E7375f3`
+**USDT Test Token Address**: `0x37607cA3C3B1dE0513AADD51709c3caCcc7f0F77`
 
 </Note>
 
 #### EdenVest cNGN Faucet
 
 <Callout emoji="🚰">
-**Faucet URL**: [https://faucet.vest.edenfinance.org](https://faucet.vest.edenfinance.org) (Coming Soon)
-**Eden Faucet**: [0x39dA94D4c05E4A9cb2cCf4b982Cc226bAAb6f7c4](https://scan-test.assetchain.org/address/0x39dA94D4c05E4A9cb2cCf4b982Cc226bAAb6f7c4)
+**Faucet URL**: [https://faucet.edenfinance.org](https://faucet.edenfinance.org)
+**Eden Faucet**: [0xf9a1c68Cb22BD77adb07185Ff50385F953b5F82e](https://scan-test.assetchain.org/address/0xf9a1c68Cb22BD77adb07185Ff50385F953b5F82e)
 
 **Amount**: 10,000 cNGN per request  
 **Rate Limit**: Once per 6 hours per address  
-**Requirements**: Valid Polygon Mumbai wallet
+**Requirements**: Valid Ethereum wallet
 </Callout>
 
 #### Manual Token Addition to Wallet
@@ -178,9 +153,9 @@ await window.ethereum.request({
   params: {
     type: 'ERC20',
     options: {
-      address: '0x5CDDBeBAc2260CF00654887184d6BA31096fE0a5', // cNGN testnet address
+      address: '0xA4040DBBa36Afa7CD86B17Df80A81cD02A3483Fa', // cNGN testnet address
       symbol: 'cNGN',
-      decimals: 18,
+      decimals: 6,
       image: 'https://assets.vest.edenfinance.org/tokens/cngn.png'
     }
   }
@@ -188,9 +163,9 @@ await window.ethereum.request({
 ```
 
 ```solidity Manual Import
-Token Contract Address: 0x5CDDBeBAc2260CF00654887184d6BA31096fE0a5
+Token Contract Address: 0xA4040DBBa36Afa7CD86B17Df80A81cD02A3483Fa
 Token Symbol: cNGN
-Token Decimals: 18
+Token Decimals: 6
 ```
 </CodeGroup>
 
@@ -199,23 +174,15 @@ Token Decimals: 18
 
 ### Core Protocol Contracts
 
-| Contract | Address | Verified |
-|----------|---------|----------|
-| **EdenCore (Proxy)** | `0x0188a48B4c19Ad164C70dc9EA73d9C275699679F` | ✅ |
-| **EdenCore (Implementation)** | `0x8bAce891bac9a59cC43E17a927d549178Ea06781` | ✅ |
-| **EdenAdmin** | `0x5dDDef12aAc72986983C20F81fAFa48ca8E36cF4` | ✅ |
-| **PoolFactory** | `0xcf13fCd3495b95aBCf3ca8E278D19d05659ac435` | ✅ |
-| **TaxCollector** | `0x0828381Bd914FC8550e7d6934A07430c2F0ebcbf` | ✅ |
-| **SwapRouter** | `0xAFb6ADa8C5b66eE46f475faD31Add0D5BCC5A745` | ✅ |
+| Contract | Address |
+|----------|---------|
+| **EdenCore Proxy** | `0xC2EdCE6C2282B367A1269Ff77FB95855067cdaaf` |
+| **EdenAdmin** | `0xE15e1aED46cE2D8A319E4885CE52177D0696722D` |
+| **TaxCollector** | `0x3BAb3110A2C4D986320F83Ac86Bab1229B3e7e4C` |
+| **SwapRouter** | `0x87A09E8048E06765A21742399018d684f2E690b3` |
+| **PoolFactory** | `0x4f703B2A060859a38DEFc9c34C8Ab02df160b15E` |
+| **NFTPositionManager** | `0x1824De8E500F92E5C08de4a152e74224548Daa83` |
 
-### Supporting Contracts
-
-| Contract | Address | Verified |
-|----------|---------|----------|
-| **NFTPositionManager** | `0x5156652BeA269413fE9349941e9732d8bD02681A` | ✅ |
-| **NFT Renderer** | `0xB3709130dDe14dA940f56E6FCd3495De79C2aC59` | ✅ |
-| **Pool Implementation** | `0x9e949EC21B720F7e6EA8f0550a9C81f66D7eD0e3` | ✅ |
-| **LP Token Implementation** | `0xE035E1eEBF16c9a6c8898B9525d2C57FE783968A` | ✅ |
 
 <Note>
 All contracts are verified on [Asset Chain Testnet Explorer](https://scan-testnet.assetchain.org). Click on any address to view the contract source code and interact with functions.

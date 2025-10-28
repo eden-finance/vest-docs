@@ -22,32 +22,16 @@
             ]
           },
           {
-            "group": "User Guides",
-            "pages": [
-              "guides/investing",
-              "guides/withdrawing",
-              "guides/nft-positions",
-              "guides/token-swaps",
-              "guides/lp-tokens"
-            ]
-          },
-          {
             "group": "Core Contracts",
             "pages": [
-              "contracts/overview",
               "contracts/eden-core",
-              "contracts/eden-admin",
-              "contracts/investment-pool",
-              "contracts/pool-factory"
+              "contracts/investment-pool"
             ]
           },
           {
             "group": "Supporting Contracts",
             "pages": [
-              "contracts/lp-token",
-              "contracts/nft-position-manager",
-              "contracts/tax-collector",
-              "contracts/swap-router"
+            
             ]
           }
          
@@ -60,20 +44,8 @@
           {
             "group": "Core Contracts",
             "pages": [
-              "contracts/overview",
               "contracts/eden-core",
-              "contracts/eden-admin",
-              "contracts/investment-pool",
-              "contracts/pool-factory"
-            ]
-          },
-          {
-            "group": "Supporting Contracts",
-            "pages": [
-              "contracts/lp-token",
-              "contracts/nft-position-manager",
-              "contracts/tax-collector",
-              "contracts/swap-router"
+              "contracts/investment-pool"
             ]
           }
         ]
@@ -83,18 +55,13 @@
       "anchors": [
         {
           "anchor": "Lend & Borrow",
-          "href": "https://mintlify.com/docs",
+          "href": "https://app.edenfinance.org",
           "icon": "book-open-cover"
         },
         {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
+          "anchor": "Telegram",
+          "href": "https://t.me/eden_finance",
           "icon": "telegram"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
         }
       ]
     }
@@ -113,7 +80,7 @@
     "primary": {
       "type": "button",
       "label": "Go to App",
-      "href": "https://app.vest.edenfinance.org"
+      "href": "https://vest.edenfinance.org"
     }
   },
   "contextual": {
